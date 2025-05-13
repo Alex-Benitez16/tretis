@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(MyGame)
+set(CMAKE_BUILD_TYPE Release)
 
 # Include Raylib as a subproject
 add_subdirectory(raylib)
