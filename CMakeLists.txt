@@ -1,26 +1,42 @@
-cmake_minimum_required(VERSION 3.16)
-project(MyRaylibProject C)
+cmake_minimum_required(VERSION 3.11)
+project(example LANGUAGES CXX)  # 1. Changed to C++ project
 
-# Default to Release build
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-endif()
+# Set C++ standard requirements
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add raylib subdirectory
-add_subdirectory(external/raylib)
+# Generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Find all C source files
-file(GLOB_RECURSE SOURCES "src/*.c")
+# ========== SOURCE FILE CONFIGURATION ==========
+# 2. Collect all C++ files from src/ directory
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-# Define executable
+# 3. Create executable from collected sources
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Link raylib
+# 4. Add include directory for headers
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+# ===============================================
+
+# Dependencies (existing raylib configuration)
+set(RAYLIB_VERSION 5.5)
+find_package(raylib ${RAYLIB_VERSION} QUIET)
+if (NOT raylib_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    raylib
+    URL https://github.com/raysan5/raylib/archive/${RAYLIB_VERSION}.tar.gz
+  )
+  FetchContent_MakeAvailable(raylib)
+endif()
+
+# Linking (comes AFTER executable creation)
 target_link_libraries(${PROJECT_NAME} raylib)
 
-# macOS-specific framework linking
+# Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)
-    target_link_libraries(${PROJECT_NAME} "-framework OpenGL" "-framework Cocoa" "-framework IOKit" "-framework CoreVideo")
-elseif(UNIX)
-    target_link_libraries(${PROJECT_NAME} m pthread dl X11)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
