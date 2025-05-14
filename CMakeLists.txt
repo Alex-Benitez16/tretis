@@ -1,23 +1,24 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyRaylibProject)
+project(MyRaylibProject C)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Default to Release build
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
 
-# Add raylib as subdirectory
+# Add raylib subdirectory
 add_subdirectory(external/raylib)
 
-# Define your source files
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+# Find all C source files
+file(GLOB_RECURSE SOURCES "src/*.c")
 
-# Add executable target
+# Define executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Link raylib and its dependencies (raylib pulls them in via find_package)
+# Link raylib
 target_link_libraries(${PROJECT_NAME} raylib)
 
-# Optional: Set platform-specific flags
+# macOS-specific framework linking
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL" "-framework Cocoa" "-framework IOKit" "-framework CoreVideo")
 elseif(UNIX)
