@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-project(example LANGUAGES CXX)  # 1. Changed to C++ project
+project(game LANGUAGES CXX)  # 1. Changed to C++ project
 
 # Set C++ standard requirements
 set(CMAKE_CXX_STANDARD 17)
