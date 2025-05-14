@@ -1,15 +1,13 @@
 #include "raylib.h"
 
 int main() {
-  InitWindow(800, 400, "Hello World");
-
+  InitWindow(800, 600, "Raylib in C");
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-    DrawText("Hello World!", 0, 0, 32, DARKGRAY);
+    DrawText("Hello from Raylib!", 300, 280, 20, DARKGRAY);
     EndDrawing();
   }
-
   CloseWindow();
   return 0;
 }
